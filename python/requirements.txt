@@ -1,0 +1,4 @@
+#ibm_cloud_sdk_core==3.22.1
+ibm_cloud_sdk_core @ git+https://github.com/SaschaSchwarze0/ibm-python-sdk-core@sascha-containerauthenticator-codeengine
+requests==2.32.3
+xmltodict==0.14.2

@@ -1,0 +1,30 @@
+name: Go image build
+on: 
+  push:
+    paths:
+      - go/**
+    branches: 
+      - main
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write  # To be able to push images
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.x'
+          check-latest: true
+          cache-dependency-path: go/go.sum
+      - name: Install Ko
+        uses: ko-build/setup-ko@v0.7
+      - name: Build image
+        working-directory: go
+        env:
+          KO_DOCKER_REPO: ghcr.io/src2img/ce-trusted-profiles-usage/go
+        run: |
+          ko build . --bare --sbom=none
