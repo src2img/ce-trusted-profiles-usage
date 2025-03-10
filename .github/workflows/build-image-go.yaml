@@ -27,4 +27,4 @@ jobs:
         env:
           KO_DOCKER_REPO: ghcr.io/src2img/ce-trusted-profiles-usage/go
         run: |
-          ko build . --bare --sbom=none
+          ko build . --bare --image-user 1001 --sbom=none
