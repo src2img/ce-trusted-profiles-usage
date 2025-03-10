@@ -1,18 +1,16 @@
-FROM ibm-semeru-runtimes:open-21-jdk AS builder
+# Download dependencies and compile in builder stage
+FROM registry.access.redhat.com/ubi9/openjdk-21 AS builder
 
-# Install Maven
-ARG MAVEN_VERSION=3.9.9
-RUN \
-  mkdir /tmp/maven && \
-  curl -fsSL "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" | tar -xzf - -C /tmp/maven --strip-components=1
-
-COPY . /src
+COPY --chown=${UID} . /src
 WORKDIR /src
-RUN /tmp/maven/bin/mvn package -Dmaven.test.skip=true
+RUN mvn package -Dmaven.test.skip=true
 
-FROM ibm-semeru-runtimes:open-21-jre
+# Build final stage
+FROM gcr.io/distroless/java21
 
-COPY --from=builder /src/target/trustedprofiles-1.0-SNAPSHOT.jar /app/trustedprofiles-1.0-SNAPSHOT.jar
+COPY --chown=1001:0 --from=builder /src/target/trustedprofiles-1.0-SNAPSHOT.jar /app/trustedprofiles-1.0-SNAPSHOT.jar
+
+USER 1001:0
 WORKDIR /app
 
-ENTRYPOINT ["java", "-jar", "trustedprofiles-1.0-SNAPSHOT.jar"]
+CMD ["trustedprofiles-1.0-SNAPSHOT.jar"]
