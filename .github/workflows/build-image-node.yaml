@@ -2,6 +2,7 @@ name: Node image build
 on: 
   push:
     paths:
+      - .github/workflows/build-image-node.yaml
       - node/**
     branches: 
       - main

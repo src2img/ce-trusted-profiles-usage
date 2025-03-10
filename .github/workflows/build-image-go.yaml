@@ -2,6 +2,7 @@ name: Go image build
 on: 
   push:
     paths:
+      - .github/workflows/build-image-go.yaml
       - go/**
     branches: 
       - main

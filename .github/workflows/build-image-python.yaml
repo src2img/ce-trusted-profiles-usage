@@ -2,6 +2,7 @@ name: Python image build
 on: 
   push:
     paths:
+      - .github/workflows/build-image-python.yaml
       - python/**
     branches: 
       - main
