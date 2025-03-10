@@ -1,0 +1,28 @@
+name: Python image build
+on: 
+  push:
+    paths:
+      - python/**
+    branches: 
+      - main
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write  # To be able to push images
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: python
+          push: true
+          tags: ghcr.io/src2img/ce-trusted-profiles-usage/python:latest
